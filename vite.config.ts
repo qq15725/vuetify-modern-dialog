@@ -1,20 +1,28 @@
-import { basename, resolve } from 'node:path'
+import path from 'node:path'
+import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
-import { browser, name } from './package.json'
-
-const resolvePath = (str: string) => resolve(__dirname, str)
+import pkg from './package.json'
 
 export default defineConfig({
+  plugins: [
+    vue(),
+  ],
   build: {
+    minify: true,
     lib: {
-      formats: ['umd'],
-      fileName: (format) => {
-        if (format === 'umd')
-          return basename(browser)
-        return `${name}.${format}`
+      entry: path.resolve(__dirname, 'src/index.ts'),
+      fileName: () => `index.js`,
+      formats: ['es'],
+    },
+    rollupOptions: {
+      external: [
+        ...Object.keys(pkg.peerDependencies || {}),
+      ].map(v => new RegExp(`^${v}`)),
+      output: {
+        assetFileNames: () => {
+          return 'index.css'
+        },
       },
-      entry: resolvePath('./src/index.ts'),
-      name: name.replace(/-(\w)/g, (_, v) => v.toUpperCase()),
     },
   },
 })
