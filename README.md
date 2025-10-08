@@ -17,3 +17,20 @@
     <img src="https://img.shields.io/npm/l/vuetify-modern-dialog.svg" alt="License">
   </a>
 </p>
+
+
+## 📦 Install
+
+```shell
+npm i vuetify-modern-dialog
+```
+
+## 🦄 Usage
+
+```ts
+import { createDialog } from 'vuetify-modern-dialog'
+import 'vuetify-modern-dialog/styles'
+
+// app is Vue app
+app.use(createDialog())
+```
