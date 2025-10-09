@@ -111,13 +111,13 @@ async function submit() {
         @submit.prevent="submit()"
       >
         <template
-          v-for="({ is: _is, key, ...itemProps }, index) in props.items"
+          v-for="({ is: _is, name, ...itemProps }, index) in props.items"
           :key="index"
         >
           <Component
             :is="(itemMap as any)[_is] ?? _is"
             v-bind="{ ...itemsDefaultProps, ...itemProps }"
-            v-model="data[key ?? index]"
+            v-model="data[name ?? index]"
           />
         </template>
       </VForm>

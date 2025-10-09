@@ -16,5 +16,8 @@ createApp(App)
       aliases,
     },
   }))
-  .use(createDialog())
+  .use(createDialog({
+    okText: '确定',
+    cancelText: '取消',
+  }))
   .mount('#root')

@@ -1,12 +1,8 @@
 import type { Component } from 'vue'
-import type { VBtn } from 'vuetify/lib/components/VBtn/index.mjs'
-import type { VCard } from 'vuetify/lib/components/VCard/index.mjs'
-import type { VDialog } from 'vuetify/lib/components/VDialog/index.mjs'
+import type { VBtn, VCard, VDialog, VTextField } from 'vuetify/components'
 
-export interface PluginOptions {
-  dialog?: VDialog['$props'] & {
-    cardProps?: VCard['$props']
-  }
+export type PluginOptions = VDialog['$props'] & {
+  cardProps?: VCard['$props']
 }
 
 export type Type = 'warning' | 'error' | 'info' | 'success' | 'loading'
@@ -20,9 +16,9 @@ export interface CustomComponent {
 }
 
 export interface Item {
+  [key: string]: any
   is: 'select' | 'input' | 'textarea' | 'progressCircular' | any
-  key?: string
-  props?: Record<string, any>
+  name?: string
 }
 
 export interface FormProps {
@@ -50,11 +46,19 @@ export interface DialogProps extends CardProps {
   cardProps?: VCard['$props']
 }
 
+type VTextFieldProps = VTextField['$props']
+
+export interface PromptDialogProps extends Omit<VTextFieldProps, 'type'>, DialogProps {
+  value?: any
+}
+
 export interface DialogInterface {
   create: (options: DialogProps) => Promise<any>
-  warning: (options: Partial<DialogProps>) => Promise<any>
-  error: (options: Partial<DialogProps>) => Promise<any>
-  info: (options: Partial<DialogProps>) => Promise<any>
-  success: (options: Partial<DialogProps>) => Promise<any>
-  confirm: (options: Partial<DialogProps>) => Promise<any>
+  warning: (options: DialogProps) => Promise<any>
+  error: (options: DialogProps) => Promise<any>
+  info: (options: DialogProps) => Promise<any>
+  success: (options: DialogProps) => Promise<any>
+  alert: (options: DialogProps) => Promise<any>
+  confirm: (options: DialogProps) => Promise<any>
+  prompt: (options: PromptDialogProps) => Promise<any>
 }

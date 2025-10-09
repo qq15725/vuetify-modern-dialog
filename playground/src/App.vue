@@ -1,41 +1,97 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useDialog } from 'vuetify-modern-dialog'
-import { VApp, VBtn, VMain } from 'vuetify/components'
+import { VApp, VBtn, VBtnGroup, VContainer, VMain } from 'vuetify/components'
 
 const dialog = useDialog()
 
-onMounted(() => {
-  dialog.create({
-    items: [
-      { is: 'input', label: 'Title' },
-      { is: 'select', label: 'Title' },
-    ],
-    onSubmit: () => {
-      return false
-    },
-  })
+async function openDialog(feature: string) {
+  const text = 'texttexttexttexttexttexttexttexttexttexttexttexttexttexttexttext'
+  let res
+  switch (feature) {
+    case 'warning':
+      res = await dialog.warning({ text })
+      break
+    case 'error':
+      res = await dialog.error({ text })
+      break
+    case 'info':
+      res = await dialog.info({ text })
+      break
+    case 'success':
+      res = await dialog.success({ text })
+      break
+    case 'alert':
+      res = await dialog.alert({ text })
+      break
+    case 'confirm':
+      res = await dialog.confirm({ text })
+      break
+    case 'prompt':
+      res = await dialog.prompt({
+        title: 'Password',
+        text,
+        placeholder: 'Input password',
+        value: 'XXXXXX',
+        onSubmit: async (res) => {
+          console.log(res)
+          await new Promise(r => setTimeout(r, 2000))
+        },
+      })
+      break
+    case 'custom':
+      res = await dialog.create({
+        items: [
+          { is: 'input', name: 'abc', label: 'abc' },
+          { is: 'select', name: 'cba', label: 'cba' },
+        ],
+        onSubmit: async (res) => {
+          console.log(res)
+          await new Promise(r => setTimeout(r, 2000))
+          return false
+        },
+      })
+      break
+  }
+  console.log(res)
+}
+
+onMounted(async () => {
+
 })
 </script>
 
 <template>
   <VApp>
     <VMain>
-      <VBtn @click="dialog.warning({ title: 'Title', text: 'texttexttexttexttext' })">
-        warning
-      </VBtn>
-      <VBtn @click="dialog.error({ text: 'text' })">
-        error
-      </VBtn>
-      <VBtn @click="dialog.info({ text: 'text' })">
-        info
-      </VBtn>
-      <VBtn @click="dialog.success({ text: 'text' })">
-        success
-      </VBtn>
-      <VBtn @click="dialog.confirm({ text: 'text' })">
-        confirm
-      </VBtn>
+      <VContainer>
+        <VBtnGroup>
+          <VBtn @click="openDialog('warning')">
+            warning
+          </VBtn>
+          <VBtn @click="openDialog('error')">
+            error
+          </VBtn>
+          <VBtn @click="openDialog('info')">
+            info
+          </VBtn>
+          <VBtn @click="openDialog('success')">
+            success
+          </VBtn>
+          <VBtn @click="openDialog('alert')">
+            alert
+          </VBtn>
+          <VBtn @click="openDialog('confirm')">
+            confirm
+          </VBtn>
+          <VBtn @click="openDialog('prompt')">
+            prompt
+          </VBtn>
+          <VBtn @click="openDialog('custom')">
+            custom
+          </VBtn>
+        </VBtnGroup>
+      </VContainer>
     </VMain>
   </VApp>
 </template>
