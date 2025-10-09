@@ -29,7 +29,6 @@ npm i vuetify-modern-dialog
 
 ```ts
 import { createDialog } from 'vuetify-modern-dialog'
-import 'vuetify-modern-dialog/styles'
 
 // app is Vue app
 app.use(createDialog())
