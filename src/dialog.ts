@@ -99,10 +99,16 @@ export function createDialogInstance(appContext: AppContext, pluginOptions: Plug
     return create({
       title: 'Prompt',
       type: 'info',
+      defaultData: {
+        prompt: props.value,
+      },
       items: [
-        { 'is': 'input', 'model-value': props.value, ...VTextField.filterProps(props) },
+        { is: 'input', name: 'prompt', ...VTextField.filterProps(props) },
       ],
       ...props,
+      onSubmit: async (data) => {
+        return props.onSubmit?.(data.prompt)
+      },
     })
   }
 
