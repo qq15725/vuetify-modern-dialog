@@ -35,7 +35,7 @@ export function createDialogInstance(appContext: AppContext, pluginOptions: Plug
 
     return create({
       title: 'Warning',
-      type: 'warning',
+      level: 'warning',
       buttons: [{ title: okText, value: true, color: 'primary', ...props.okButtonProps }],
       ...props,
     })
@@ -46,7 +46,7 @@ export function createDialogInstance(appContext: AppContext, pluginOptions: Plug
 
     return create({
       title: 'Error',
-      type: 'error',
+      level: 'error',
       buttons: [{ title: okText, value: true, color: 'primary', ...props.okButtonProps }],
       ...props,
     })
@@ -57,7 +57,7 @@ export function createDialogInstance(appContext: AppContext, pluginOptions: Plug
 
     return create({
       title: 'Info',
-      type: 'info',
+      level: 'info',
       buttons: [{ title: okText, value: true, color: 'primary', ...props.okButtonProps }],
       ...props,
     })
@@ -68,7 +68,7 @@ export function createDialogInstance(appContext: AppContext, pluginOptions: Plug
 
     return create({
       title: 'Success',
-      type: 'success',
+      level: 'success',
       buttons: [{ title: okText, value: true, color: 'primary', ...props.okButtonProps }],
       ...props,
     })
@@ -89,7 +89,7 @@ export function createDialogInstance(appContext: AppContext, pluginOptions: Plug
 
     return create({
       title: 'Confirm',
-      type: 'info',
+      level: 'info',
       okText: okText ?? 'Confirm',
       ...props,
     })
@@ -98,7 +98,7 @@ export function createDialogInstance(appContext: AppContext, pluginOptions: Plug
   function prompt(props: PromptDialogProps = {}): Promise<any> {
     return create({
       title: 'Prompt',
-      type: 'info',
+      level: 'info',
       defaultData: {
         prompt: props.value,
       },

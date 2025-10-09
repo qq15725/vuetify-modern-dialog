@@ -5,7 +5,7 @@ export type PluginOptions = VDialog['$props'] & {
   cardProps?: VCard['$props']
 }
 
-export type Type = 'warning' | 'error' | 'info' | 'success' | 'loading'
+export type Level = 'warning' | 'error' | 'info' | 'success'
 
 export type ButtonProps = Omit<VBtn['$props'], 'text'>
   & { title: string, value: any }
@@ -32,7 +32,7 @@ export interface CardProps extends FormProps {
   title?: string
   text?: string
   icon?: string
-  type?: Type
+  level?: Level
   okText?: string
   okButtonProps?: ButtonProps
   cancelText?: string

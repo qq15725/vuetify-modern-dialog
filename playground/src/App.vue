@@ -33,6 +33,7 @@ async function openDialog(feature: string) {
         text,
         placeholder: 'Input password',
         value: 'XXXXXX',
+        type: 'password',
         onSubmit: async (res) => {
           console.log(res)
           await new Promise(r => setTimeout(r, 2000))
