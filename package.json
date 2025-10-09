@@ -1,7 +1,7 @@
 {
   "name": "vuetify-modern-dialog",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "packageManager": "pnpm@10.18.1",
   "description": "Dialogs in vuetify 3",
   "author": "wxm",
