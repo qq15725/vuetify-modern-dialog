@@ -79,7 +79,7 @@ export function createDialogInstance(appContext: AppContext, pluginOptions: Plug
   }
 }
 
-export const createDialog: Plugin = (options?: PluginOptions) => {
+export function createDialog(options?: PluginOptions): Plugin {
   return (app: App) => {
     const dialog = createDialogInstance(app._context, options)
     app.provide(DialogKey, dialog)

@@ -1,4 +1,4 @@
-import type { Component, Plugin } from 'vue'
+import type { Component } from 'vue'
 import type { VBtn } from 'vuetify/lib/components/VBtn/index.mjs'
 import type { VCard } from 'vuetify/lib/components/VCard/index.mjs'
 import type { VDialog } from 'vuetify/lib/components/VDialog/index.mjs'
@@ -7,7 +7,6 @@ export interface PluginOptions {
   dialog?: VDialog['$props'] & {
     cardProps?: VCard['$props']
   }
-  vuetify?: Plugin
 }
 
 export type Type = 'warning' | 'error' | 'info' | 'success' | 'loading'
