@@ -3,7 +3,7 @@ import type { VBtn, VCard, VDialog, VTextField } from 'vuetify/components'
 
 export type ButtonProps
   = & Omit<VBtn['$props'], 'text'>
-    & { title: string, value: any }
+    & { title: string, value: any, onClick?: () => void }
 
 export type Level = 'warning' | 'error' | 'info' | 'success'
 
@@ -30,7 +30,7 @@ export interface CardProps {
   title?: string
   subtitle?: string
   text?: string
-  icon?: string
+  icon?: any
   level?: Level
   closable?: boolean
   buttons?: ButtonProps[]
@@ -51,11 +51,11 @@ export interface CustomComponent {
 export interface DialogProps extends CardProps {
   custom?: CustomComponent
   dialog?: VDialog['$props']
-  onDialog?: (isActive: Ref<boolean>) => void
+  onDialog?: (ctx: { isActive: Ref<boolean> }) => void
 }
 
 export interface PromptDialogProps extends DialogProps {
-  input: VTextField['$props']
+  input?: VTextField['$props']
 }
 
 export interface DialogInterface {

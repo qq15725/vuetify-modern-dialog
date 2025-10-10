@@ -8,7 +8,7 @@ export const DialogKey: InjectionKey<DialogInterface> = Symbol('dialog')
 export function createDialogInstance(appContext: AppContext, pluginProps: DialogProps = {}): DialogInterface {
   const { dialog, custom, ...restProps } = pluginProps
 
-  function getProps(props: DialogProps): DialogProps {
+  function getProps<T extends DialogProps = DialogProps>(props: T): T {
     return {
       custom,
       closable: true,
@@ -90,7 +90,7 @@ export function createDialogInstance(appContext: AppContext, pluginProps: Dialog
   }
 
   function prompt(props: PromptDialogProps = {}): Promise<any> {
-    const { value, input, onOk, ..._props } = getProps(props)
+    const { value, input, onOk, ..._props } = getProps(props) as PromptDialogProps
 
     return create({
       title: 'Prompt',

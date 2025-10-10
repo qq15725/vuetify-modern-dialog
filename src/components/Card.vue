@@ -49,7 +49,7 @@ const items = computed(() => {
     const { is: _is, name = index, ...itemProps } = item
     return {
       ...itemProps,
-      is: itemMap[_is] ?? _is,
+      is: (itemMap as any)[_is as any] ?? _is,
       name,
       modelValue: data[name],
       onUpdateModelValue: (value: any) => data[name] = value,
