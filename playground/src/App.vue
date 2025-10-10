@@ -31,10 +31,12 @@ async function openDialog(feature: string) {
       res = await dialog.prompt({
         title: 'Password',
         text,
-        placeholder: 'Input password',
         value: 'XXXXXX',
-        type: 'password',
-        onSubmit: async (res) => {
+        input: {
+          type: 'password',
+          placeholder: 'Input password',
+        },
+        onOk: async (res) => {
           console.log(res)
           await new Promise(r => setTimeout(r, 2000))
         },
@@ -42,11 +44,12 @@ async function openDialog(feature: string) {
       break
     case 'custom':
       res = await dialog.create({
+        title: 'Custom',
         items: [
           { is: 'input', name: 'abc', label: 'abc' },
           { is: 'select', name: 'cba', label: 'cba' },
         ],
-        onSubmit: async (res) => {
+        onOk: async (res) => {
           console.log(res)
           await new Promise(r => setTimeout(r, 2000))
           return false

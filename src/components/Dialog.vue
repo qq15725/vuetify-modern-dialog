@@ -1,22 +1,26 @@
 <script setup lang="ts">
-import type { CardProps, DialogProps } from '../types'
+import type { DialogProps } from '../types'
 import { computed, ref, watch } from 'vue'
 import { VDialog } from 'vuetify/components'
 import Card from './Card.vue'
 
-const props = defineProps<DialogProps>()
+const props = withDefaults(defineProps<DialogProps>(), {
+  okButton: undefined,
+  cancelButton: undefined,
+})
 
 const emit = defineEmits([
   'close',
 ])
 
 const isActive = ref(true)
-const cardProps = computed(() => {
-  const { dialogProps, customComponent, cardProps, ...restProps } = props
+const computedProps = computed(() => {
+  const { dialog, custom, ...card } = props
   return {
-    ...restProps,
-    ...cardProps,
-  } as CardProps
+    dialog,
+    custom,
+    card,
+  }
 })
 
 function close(value: any) {
@@ -34,19 +38,19 @@ watch(isActive, (newValue) => {
 <template>
   <VDialog
     v-model="isActive"
-    v-bind="props.dialogProps"
+    v-bind="computedProps.dialog"
   >
-    <template v-if="props.customComponent">
+    <template v-if="computedProps.custom">
       <component
-        :is="props.customComponent.component"
-        v-bind="props.customComponent.props"
+        :is="computedProps.custom.component"
+        v-bind="computedProps.custom.props"
         @close="close"
       />
     </template>
 
     <Card
       v-else
-      v-bind="cardProps"
+      v-bind="computedProps.card"
       @close="close"
     />
   </VDialog>

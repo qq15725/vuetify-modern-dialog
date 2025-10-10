@@ -1,55 +1,48 @@
 import type { Component } from 'vue'
 import type { VBtn, VCard, VDialog, VTextField } from 'vuetify/components'
 
-export type PluginOptions = VDialog['$props'] & {
-  cardProps?: VCard['$props']
-}
+export type ButtonProps
+  = & Omit<VBtn['$props'], 'text'>
+    & { title: string, value: any }
 
 export type Level = 'warning' | 'error' | 'info' | 'success'
 
-export type ButtonProps = Omit<VBtn['$props'], 'text'>
-  & { title: string, value: any }
-
-export interface CustomComponent {
-  component: Component
-  props: any
-}
-
 export interface Item {
   [key: string]: any
-  is: 'select' | 'input' | 'textarea' | 'progressCircular' | any
+  is: 'select' | 'input' | 'textarea' | 'progressCircular' | Component
   name?: string
 }
 
-export interface FormProps {
+export interface CardProps {
+  card?: VCard['$props']
   items?: Item[]
   itemsDefaultProps?: Record<string, any>
-  defaultData?: Record<string, any>
-  onSubmit?: (data: Record<string, any>) => void | boolean | Promise<void | boolean>
-}
-
-export interface CardProps extends FormProps {
   title?: string
   text?: string
   icon?: string
   level?: Level
-  okText?: string
-  okButtonProps?: ButtonProps
-  cancelText?: string
-  cancelButtonProps?: ButtonProps
   buttons?: ButtonProps[]
+  value?: any
+  okText?: string
+  okButton?: ButtonProps | false
+  onOk?: (data: Record<string, any>) => void | boolean | Promise<void | boolean>
+  cancelText?: string
+  cancelButton?: ButtonProps | false
+  onCancel?: () => void | boolean | Promise<void | boolean>
+}
+
+export interface CustomComponent {
+  [key: string]: any
+  is: Component
 }
 
 export interface DialogProps extends CardProps {
-  customComponent?: CustomComponent
-  dialogProps?: VDialog['$props']
-  cardProps?: VCard['$props']
+  custom?: CustomComponent
+  dialog?: VDialog['$props']
 }
 
-type VTextFieldProps = VTextField['$props']
-
-export interface PromptDialogProps extends Omit<VTextFieldProps, 'type'>, DialogProps {
-  value?: any
+export interface PromptDialogProps extends DialogProps {
+  input: VTextField['$props']
 }
 
 export interface DialogInterface {

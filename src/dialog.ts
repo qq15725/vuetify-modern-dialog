@@ -1,18 +1,21 @@
 import type { App, AppContext, InjectionKey, Plugin } from 'vue'
-import type { DialogInterface, DialogProps, PluginOptions, PromptDialogProps } from './types'
+import type { DialogInterface, DialogProps, PromptDialogProps } from './types'
 import { h, render } from 'vue'
-import { VTextField } from 'vuetify/components'
 import Dialog from './components/Dialog.vue'
 
 export const DialogKey: InjectionKey<DialogInterface> = Symbol('dialog')
 
-export function createDialogInstance(appContext: AppContext, pluginOptions: PluginOptions = {}): DialogInterface {
-  const { cardProps, ...dialogProps } = pluginOptions
+export function createDialogInstance(appContext: AppContext, pluginProps: DialogProps = {}): DialogInterface {
+  const { dialog, custom, ...restProps } = pluginProps
 
   function getProps(props: DialogProps): DialogProps {
     return {
-      cardProps,
-      ...dialogProps,
+      custom,
+      dialog: {
+        ...dialog,
+        ...props.dialog,
+      },
+      ...restProps,
       ...props,
     }
   }
@@ -30,85 +33,73 @@ export function createDialogInstance(appContext: AppContext, pluginOptions: Plug
     })
   }
 
-  function warning(props: Partial<DialogProps> = {}): Promise<any> {
-    const { okText = 'OK' } = getProps(props)
-
+  function warning(props: DialogProps = {}): Promise<any> {
     return create({
       title: 'Warning',
       level: 'warning',
-      buttons: [{ title: okText, value: true, color: 'primary', ...props.okButtonProps }],
+      cancelButton: false,
       ...props,
     })
   }
 
-  function error(props: Partial<DialogProps> = {}): Promise<any> {
-    const { okText = 'OK' } = getProps(props)
-
+  function error(props: DialogProps = {}): Promise<any> {
     return create({
       title: 'Error',
       level: 'error',
-      buttons: [{ title: okText, value: true, color: 'primary', ...props.okButtonProps }],
+      cancelButton: false,
       ...props,
     })
   }
 
-  function info(props: Partial<DialogProps> = {}): Promise<any> {
-    const { okText = 'OK' } = getProps(props)
-
+  function info(props: DialogProps = {}): Promise<any> {
     return create({
       title: 'Info',
       level: 'info',
-      buttons: [{ title: okText, value: true, color: 'primary', ...props.okButtonProps }],
+      cancelButton: false,
       ...props,
     })
   }
 
-  function success(props: Partial<DialogProps> = {}): Promise<any> {
-    const { okText = 'OK' } = getProps(props)
-
+  function success(props: DialogProps = {}): Promise<any> {
     return create({
       title: 'Success',
       level: 'success',
-      buttons: [{ title: okText, value: true, color: 'primary', ...props.okButtonProps }],
+      cancelButton: false,
       ...props,
     })
   }
 
-  function alert(props: Partial<DialogProps> = {}): Promise<any> {
-    const { okText = 'OK' } = getProps(props)
-
+  function alert(props: DialogProps = {}): Promise<any> {
     return create({
       title: 'Alert',
-      buttons: [{ title: okText, value: true, color: 'primary', ...props.okButtonProps }],
+      cancelButton: false,
       ...props,
     })
   }
 
-  function confirm(props: Partial<DialogProps> = {}): Promise<any> {
-    const { okText = 'OK' } = getProps(props)
+  function confirm(props: DialogProps = {}): Promise<any> {
+    const { okText = 'Confirm' } = getProps(props)
 
     return create({
       title: 'Confirm',
       level: 'info',
-      okText: okText ?? 'Confirm',
+      okText,
       ...props,
     })
   }
 
   function prompt(props: PromptDialogProps = {}): Promise<any> {
+    const { value, input, onOk, ..._props } = getProps(props)
+
     return create({
       title: 'Prompt',
       level: 'info',
-      defaultData: {
-        prompt: props.value,
-      },
+      ..._props,
       items: [
-        { is: 'input', name: 'prompt', ...VTextField.filterProps(props) },
+        { is: 'input', name: 'value', ...input },
       ],
-      ...props,
-      onSubmit: async (data) => {
-        return props.onSubmit?.(data.prompt)
-      },
+      value: { value },
+      onOk: async data => onOk?.(data.value),
     })
   }
 
@@ -124,7 +115,7 @@ export function createDialogInstance(appContext: AppContext, pluginOptions: Plug
   }
 }
 
-export function createDialog(options?: PluginOptions): Plugin {
+export function createDialog(options?: DialogProps): Plugin {
   return (app: App) => {
     const dialog = createDialogInstance(app._context, options)
     app.provide(DialogKey, dialog)

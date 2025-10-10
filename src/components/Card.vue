@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { CardProps } from '../types'
-import { computed, reactive, ref } from 'vue'
+import type { ButtonProps, CardProps } from '../types'
+import { computed, mergeProps, reactive, ref } from 'vue'
 import {
   VBtn,
   VCard,
@@ -16,7 +16,10 @@ import {
   VTextField,
 } from 'vuetify/components'
 
-const props = defineProps<CardProps>()
+const props = withDefaults(defineProps<CardProps>(), {
+  okButton: undefined,
+  cancelButton: undefined,
+})
 const emit = defineEmits([
   'close',
 ])
@@ -27,29 +30,38 @@ const itemMap = {
   textarea: VTextarea,
   progressCircular: VProgressCircular,
 }
-const loading = ref(false)
+const oking = ref(false)
+const canceling = ref(false)
 const data = reactive<Record<string, any>>(
-  JSON.parse(JSON.stringify(props.defaultData ?? {})),
+  JSON.parse(JSON.stringify(props.value ?? {})),
 )
-const computedButtons = computed(() => {
+const buttons = computed(() => {
   if (props.buttons?.length) {
     return props.buttons
   }
   else {
     return [
-      {
-        title: props.cancelText ?? 'Cancel',
-        value: false,
-        color: undefined,
-        ...props.cancelButtonProps,
-      },
-      {
-        title: props.okText ?? 'OK',
-        value: true,
-        color: 'primary',
-        ...props.okButtonProps,
-      },
-    ]
+      props.cancelButton === false
+        ? undefined
+        : {
+            title: props.cancelText ?? 'Cancel',
+            value: false,
+            color: undefined,
+            onClick: cancel,
+            loading: canceling.value,
+            ...props.cancelButton,
+          },
+      props.okButton === false
+        ? undefined
+        : {
+            title: props.okText ?? 'OK',
+            value: true,
+            color: 'primary',
+            onClick: ok,
+            loading: oking.value,
+            ...props.okButton,
+          },
+    ].filter(Boolean) as ButtonProps[]
   }
 })
 
@@ -83,15 +95,27 @@ const computedColor = computed(() => {
   }
 })
 
-async function submit() {
-  loading.value = true
+async function ok() {
+  oking.value = true
   try {
-    if (await props.onSubmit?.(data) !== false) {
+    if (await props.onOk?.(data) !== false) {
       emit('close', true)
     }
   }
   finally {
-    loading.value = false
+    oking.value = false
+  }
+}
+
+async function cancel() {
+  canceling.value = true
+  try {
+    if (await props.onCancel?.() !== false) {
+      emit('close', false)
+    }
+  }
+  finally {
+    canceling.value = false
   }
 }
 </script>
@@ -108,7 +132,7 @@ async function submit() {
     <VCardText>
       <VForm
         v-if="props.items?.length"
-        @submit.prevent="submit()"
+        @submit.prevent="ok()"
       >
         <template
           v-for="({ is: _is, name, ...itemProps }, index) in props.items"
@@ -129,18 +153,11 @@ async function submit() {
 
     <VCardActions>
       <VBtn
-        v-for="(button, index) in computedButtons" :key="index"
-        v-bind="button"
-        :color="button.color"
-        :loading="button.value === true && Boolean(props.items?.length) && loading"
-        @click="() => {
-          if (button.value === true && props.items?.length) {
-            submit()
-          }
-          else {
-            emit('close', button.value)
-          }
-        }"
+        v-for="(button, index) in buttons" :key="index"
+        v-bind="mergeProps(
+          { onClick: () => emit('close', button.value) },
+          button,
+        )"
       >
         {{ button.title }}
       </VBtn>
