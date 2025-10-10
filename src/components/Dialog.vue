@@ -5,7 +5,6 @@ import { VDialog } from 'vuetify/components'
 import Card from './Card.vue'
 
 const props = withDefaults(defineProps<DialogProps>(), {
-  closable: true,
   okButton: undefined,
   cancelButton: undefined,
 })
@@ -16,13 +15,16 @@ const emit = defineEmits([
 
 const isActive = ref(true)
 const computedProps = computed(() => {
-  const { dialog, custom, ...card } = props
+  const { dialog, custom, onDialog, ...card } = props
   return {
     dialog,
     custom,
+    onDialog,
     card,
   }
 })
+
+computedProps.value.onDialog?.({ isActive })
 
 function close(value: any) {
   isActive.value = false

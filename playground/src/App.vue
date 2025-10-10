@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { useDialog } from 'vuetify-modern-dialog'
 import { VApp, VBtn, VBtnGroup, VContainer, VMain } from 'vuetify/components'
 
@@ -42,6 +41,14 @@ async function openDialog(feature: string) {
         },
       })
       break
+    case 'loading':
+      res = await dialog.loading({
+        onDialog: async ({ isActive }) => {
+          await new Promise(r => setTimeout(r, 2000))
+          isActive.value = false
+        },
+      })
+      break
     case 'custom':
       res = await dialog.create({
         title: 'Custom',
@@ -64,10 +71,6 @@ async function openDialog(feature: string) {
   }
   console.log(res)
 }
-
-onMounted(async () => {
-
-})
 </script>
 
 <template>
@@ -95,6 +98,9 @@ onMounted(async () => {
           </VBtn>
           <VBtn @click="openDialog('prompt')">
             prompt
+          </VBtn>
+          <VBtn @click="openDialog('loading')">
+            loading
           </VBtn>
           <VBtn @click="openDialog('custom')">
             custom

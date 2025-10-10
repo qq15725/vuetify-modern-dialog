@@ -33,3 +33,19 @@ import { createDialog } from 'vuetify-modern-dialog'
 // app is Vue app
 app.use(createDialog())
 ```
+
+```ts
+import { useDialog } from 'vuetify-modern-dialog'
+
+const dialog = useDialog()
+
+dialog.warning()
+dialog.error()
+dialog.info()
+dialog.success()
+dialog.alert()
+dialog.confirm()
+dialog.prompt()
+dialog.loading()
+dialog.create()
+```

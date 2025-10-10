@@ -6,13 +6,11 @@ import {
   VAutocomplete,
   VBtn,
   VCard,
-  VCardActions,
-  VCardText,
-  VCardTitle,
   VCheckbox,
   VFileInput,
   VForm,
   VIcon,
+  VProgressCircular,
   VRangeSlider,
   VSelect,
   VSlider,
@@ -23,7 +21,6 @@ import {
 } from 'vuetify/components'
 
 const props = withDefaults(defineProps<CardProps>(), {
-  closable: true,
   okButton: undefined,
   cancelButton: undefined,
 })
@@ -51,7 +48,6 @@ const items = computed(() => {
   return props.items?.map((item, index) => {
     const { is: _is, name = index, ...itemProps } = item
     return {
-      ...props.itemsDefaultProps,
       ...itemProps,
       is: itemMap[_is] ?? _is,
       name,
@@ -171,28 +167,43 @@ function close() {
 
 <template>
   <VCard>
-    <VCardTitle style="display: flex; align-items: center;">
+    <template v-if="icon" #prepend>
       <VIcon
-        v-if="icon"
         :color="color"
         style="margin-right: 8px;"
         :icon="icon"
       />
-      <span v-if="title">{{ title }}</span>
-      <template
-        v-if="props.closable"
-      >
+    </template>
+
+    <template #title>
+      <div style="display: flex; align-items: center;">
+        <span v-if="title">{{ title }}</span>
+
         <VSpacer />
+
         <VBtn
+          v-if="props.closable && !props.loading"
           variant="text"
           density="comfortable"
           icon="$close"
           @click="close"
         />
-      </template>
-    </VCardTitle>
+      </div>
+    </template>
 
-    <VCardText>
+    <template v-if="props.subtitle" #subtitle>
+      {{ props.subtitle }}
+    </template>
+
+    <template v-if="props.loading" #append>
+      <VProgressCircular
+        indeterminate
+        size="16"
+        width="2"
+      />
+    </template>
+
+    <template v-if="text || items.length" #text>
       <VForm
         v-if="items.length"
         @submit.prevent="ok"
@@ -208,15 +219,15 @@ function close() {
       <template v-else>
         {{ text }}
       </template>
-    </VCardText>
+    </template>
 
-    <VCardActions>
+    <template v-if="buttons.length" #actions>
       <VBtn
         v-for="(button, index) in buttons" :key="index"
         v-bind="button"
       >
         {{ button.title }}
       </VBtn>
-    </VCardActions>
+    </template>
   </VCard>
 </template>

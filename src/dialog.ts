@@ -11,20 +11,21 @@ export function createDialogInstance(appContext: AppContext, pluginProps: Dialog
   function getProps(props: DialogProps): DialogProps {
     return {
       custom,
+      closable: true,
+      ...restProps,
+      ...props,
       dialog: {
+        maxWidth: 400,
+        scrollable: true,
         ...dialog,
         ...props.dialog,
       },
-      ...restProps,
-      ...props,
     }
   }
 
   function create(props: DialogProps): Promise<any> {
     return new Promise<any>((resolve) => {
       const vNode = h(Dialog, {
-        maxWidth: 400,
-        scrollable: true,
         ...getProps(props),
         onClose: (value: any) => resolve(value),
       })
@@ -103,6 +104,19 @@ export function createDialogInstance(appContext: AppContext, pluginProps: Dialog
     })
   }
 
+  function loading(props: DialogProps = {}): Promise<any> {
+    return create({
+      title: 'Loading',
+      loading: true,
+      cancelButton: false,
+      okButton: false,
+      dialog: {
+        persistent: true,
+      },
+      ...props,
+    })
+  }
+
   return {
     create,
     warning,
@@ -112,6 +126,7 @@ export function createDialogInstance(appContext: AppContext, pluginProps: Dialog
     alert,
     confirm,
     prompt,
+    loading,
   }
 }
 
