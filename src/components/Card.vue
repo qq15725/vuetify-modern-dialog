@@ -3,16 +3,21 @@ import type { Component } from 'vue'
 import type { ButtonProps, CardProps } from '../types'
 import { computed, h, reactive, ref } from 'vue'
 import {
+  VAutocomplete,
   VBtn,
   VCard,
   VCardActions,
   VCardText,
   VCardTitle,
+  VCheckbox,
+  VFileInput,
   VForm,
   VIcon,
-  VProgressCircular,
+  VRangeSlider,
   VSelect,
+  VSlider,
   VSpacer,
+  VSwitch,
   VTextarea,
   VTextField,
 } from 'vuetify/components'
@@ -32,10 +37,15 @@ const data = reactive<Record<string, any>>(
   JSON.parse(JSON.stringify(props.value ?? {})),
 )
 const itemMap = {
-  select: VSelect,
+  autocomplete: VAutocomplete,
   input: VTextField,
+  fileInput: VFileInput,
   textarea: VTextarea,
-  progressCircular: VProgressCircular,
+  select: VSelect,
+  switch: VSwitch,
+  checkbox: VCheckbox,
+  slider: VSlider,
+  rangeSlider: VRangeSlider,
 }
 const items = computed(() => {
   return props.items?.map((item, index) => {

@@ -9,7 +9,17 @@ export type Level = 'warning' | 'error' | 'info' | 'success'
 
 export interface Item {
   [key: string]: any
-  is: 'select' | 'input' | 'textarea' | 'progressCircular' | Component
+  is:
+    | 'autocomplete'
+    | 'input'
+    | 'fileInput'
+    | 'textarea'
+    | 'select'
+    | 'switch'
+    | 'checkbox'
+    | 'slider'
+    | 'rangeSlider'
+    | Component
   name?: string
 }
 
