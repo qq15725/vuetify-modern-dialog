@@ -1,3 +1,15 @@
+## [0.0.4](https://github.com/qq15725/vuetify-modern-dialog/compare/v0.0.3...v0.0.4) (2025-10-10)
+
+
+### Features
+
+* loading ([d7c4fa1](https://github.com/qq15725/vuetify-modern-dialog/commit/d7c4fa10128f3320c6fc657edfae1aaee3db5eee))
+* update ([3d2941f](https://github.com/qq15725/vuetify-modern-dialog/commit/3d2941f865f07283f6d46e20b19dfa5f146c5eb6))
+* update ([7796609](https://github.com/qq15725/vuetify-modern-dialog/commit/779660926bd7fadd16b1f383a5d15b1c0d0e2d84))
+* update ([a1d64b6](https://github.com/qq15725/vuetify-modern-dialog/commit/a1d64b641b8501ca21164b5e551259f46ada0d3b))
+
+
+
 ## [0.0.3](https://github.com/qq15725/vuetify-modern-dialog/compare/v0.0.2...v0.0.3) (2025-10-09)
 
 
