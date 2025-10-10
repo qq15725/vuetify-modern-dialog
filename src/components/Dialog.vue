@@ -5,6 +5,7 @@ import { VDialog } from 'vuetify/components'
 import Card from './Card.vue'
 
 const props = withDefaults(defineProps<DialogProps>(), {
+  closable: true,
   okButton: undefined,
   cancelButton: undefined,
 })

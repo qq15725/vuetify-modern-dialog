@@ -21,6 +21,7 @@ export interface CardProps {
   text?: string
   icon?: string
   level?: Level
+  closable?: boolean
   buttons?: ButtonProps[]
   value?: any
   okText?: string

@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
 import type { ButtonProps, CardProps } from '../types'
-import { computed, mergeProps, reactive, ref } from 'vue'
+import { computed, h, reactive, ref } from 'vue'
 import {
   VBtn,
   VCard,
@@ -17,6 +18,7 @@ import {
 } from 'vuetify/components'
 
 const props = withDefaults(defineProps<CardProps>(), {
+  closable: true,
   okButton: undefined,
   cancelButton: undefined,
 })
@@ -24,66 +26,99 @@ const emit = defineEmits([
   'close',
 ])
 
+const oking = ref(false)
+const canceling = ref(false)
+const data = reactive<Record<string, any>>(
+  JSON.parse(JSON.stringify(props.value ?? {})),
+)
 const itemMap = {
   select: VSelect,
   input: VTextField,
   textarea: VTextarea,
   progressCircular: VProgressCircular,
 }
-const oking = ref(false)
-const canceling = ref(false)
-const data = reactive<Record<string, any>>(
-  JSON.parse(JSON.stringify(props.value ?? {})),
-)
-const buttons = computed(() => {
-  if (props.buttons?.length) {
-    return props.buttons
-  }
-  else {
-    return [
-      props.cancelButton === false
-        ? undefined
-        : {
-            title: props.cancelText ?? 'Cancel',
-            value: false,
-            color: undefined,
-            onClick: cancel,
-            loading: canceling.value,
-            ...props.cancelButton,
-          },
-      props.okButton === false
-        ? undefined
-        : {
-            title: props.okText ?? 'OK',
-            value: true,
-            color: 'primary',
-            onClick: ok,
-            loading: oking.value,
-            ...props.okButton,
-          },
-    ].filter(Boolean) as ButtonProps[]
-  }
+const items = computed(() => {
+  return props.items?.map((item, index) => {
+    const { is: _is, name = index, ...itemProps } = item
+    return {
+      ...props.itemsDefaultProps,
+      ...itemProps,
+      is: itemMap[_is] ?? _is,
+      name,
+      modelValue: data[name],
+      onUpdateModelValue: (value: any) => data[name] = value,
+    }
+  }) ?? []
 })
 
-const computedIcon = computed(() => {
+const buttons = computed(() => {
+  const items: ButtonProps[] = []
+  if (props.buttons?.length) {
+    items.push(...props.buttons)
+  }
+  else {
+    if (props.cancelButton !== false) {
+      items.push({
+        title: props.cancelText ?? 'Cancel',
+        value: false,
+        color: undefined,
+        onClick: cancel,
+        loading: canceling.value,
+        ...props.cancelButton,
+      })
+    }
+    if (props.okButton !== false) {
+      items.push({
+        title: props.okText ?? 'OK',
+        value: true,
+        color: 'primary',
+        onClick: ok,
+        loading: oking.value,
+        ...props.okButton,
+      })
+    }
+  }
+  return items.map((button) => {
+    return {
+      ...button,
+      onClick: button?.onClick ?? (() => emit('close', button.value)),
+    }
+  })
+})
+
+function hSVG(d: string): Component {
+  return h('svg', {
+    xmlns: 'http://www.w3.org/2000/svg',
+    width: '32',
+    height: '32',
+    viewBox: '0 0 24 24',
+  }, [
+    h('path', {
+      fill: 'currentColor',
+      d,
+    }),
+  ])
+}
+
+const icon = computed(() => {
   if (props.icon)
     return props.icon
 
   switch (props.level) {
     case 'warning':
-      return '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M13 14h-2V9h2m0 9h-2v-2h2M1 21h22L12 2z"/></svg>'
+      return hSVG('M13 14h-2V9h2m0 9h-2v-2h2M1 21h22L12 2z')
     case 'error':
-      return '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M13 13h-2V7h2m0 10h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg>'
+      return hSVG('M13 13h-2V7h2m0 10h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2')
     case 'success':
-      return '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10s10-4.5 10-10S17.5 2 12 2m-2 15l-5-5l1.41-1.41L10 14.17l7.59-7.59L19 8z"/></svg>'
+      return hSVG('M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10s10-4.5 10-10S17.5 2 12 2m-2 15l-5-5l1.41-1.41L10 14.17l7.59-7.59L19 8z')
     case 'info':
-      return '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M13 9h-2V7h2m0 10h-2v-6h2m-1-9A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg>'
+      return hSVG('M13 9h-2V7h2m0 10h-2v-6h2m-1-9A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2')
     default:
       return undefined
   }
 })
 
-const computedColor = computed(() => {
+const color = computed(() => {
   switch (props.level) {
     case 'warning':
     case 'error':
@@ -118,31 +153,45 @@ async function cancel() {
     canceling.value = false
   }
 }
+
+function close() {
+  emit('close', false)
+}
 </script>
 
 <template>
   <VCard>
     <VCardTitle style="display: flex; align-items: center;">
-      <VIcon v-if="computedIcon" :color="computedColor" style="margin-right: 8px;" v-html="computedIcon" />
+      <VIcon
+        v-if="icon"
+        :color="color"
+        style="margin-right: 8px;"
+        :icon="icon"
+      />
       <span v-if="title">{{ title }}</span>
-      <VSpacer />
-      <VBtn variant="text" density="comfortable" icon="$close" @click="emit('close', false)" />
+      <template
+        v-if="props.closable"
+      >
+        <VSpacer />
+        <VBtn
+          variant="text"
+          density="comfortable"
+          icon="$close"
+          @click="close"
+        />
+      </template>
     </VCardTitle>
 
     <VCardText>
       <VForm
-        v-if="props.items?.length"
-        @submit.prevent="ok()"
+        v-if="items.length"
+        @submit.prevent="ok"
       >
         <template
-          v-for="({ is: _is, name, ...itemProps }, index) in props.items"
+          v-for="({ is: _is, ...itemProps }, index) in items"
           :key="index"
         >
-          <Component
-            :is="(itemMap as any)[_is] ?? _is"
-            v-bind="{ ...itemsDefaultProps, ...itemProps }"
-            v-model="data[name ?? index]"
-          />
+          <Component :is="_is" v-bind="itemProps" />
         </template>
       </VForm>
 
@@ -154,10 +203,7 @@ async function cancel() {
     <VCardActions>
       <VBtn
         v-for="(button, index) in buttons" :key="index"
-        v-bind="mergeProps(
-          { onClick: () => emit('close', button.value) },
-          button,
-        )"
+        v-bind="button"
       >
         {{ button.title }}
       </VBtn>

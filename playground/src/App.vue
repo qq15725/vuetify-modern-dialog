@@ -45,12 +45,17 @@ async function openDialog(feature: string) {
     case 'custom':
       res = await dialog.create({
         title: 'Custom',
+        icon: '$close',
         items: [
           { is: 'input', name: 'abc', label: 'abc' },
           { is: 'select', name: 'cba', label: 'cba' },
         ],
         onOk: async (res) => {
           console.log(res)
+          await new Promise(r => setTimeout(r, 2000))
+          return false
+        },
+        onCancel: async () => {
           await new Promise(r => setTimeout(r, 2000))
           return false
         },
