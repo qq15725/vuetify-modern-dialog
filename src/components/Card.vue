@@ -14,7 +14,6 @@ import {
   VRangeSlider,
   VSelect,
   VSlider,
-  VSpacer,
   VSwitch,
   VTextarea,
   VTextField,
@@ -85,10 +84,11 @@ const buttons = computed(() => {
     }
   }
   return items.map((button) => {
-    return {
-      ...button,
-      onClick: button?.onClick ?? (() => emit('close', button.value)),
-    }
+    const close = (value?: any) => emit('close', value ?? button.value)
+    const onClick = button?.onClick ?? ((close: any) => close())
+    const _button = { ...button }
+    _button.onClick = () => onClick(close)
+    return _button
   })
 })
 
@@ -170,25 +170,12 @@ function close() {
     <template v-if="icon" #prepend>
       <VIcon
         :color="color"
-        style="margin-right: 8px;"
         :icon="icon"
       />
     </template>
 
-    <template #title>
-      <div style="display: flex; align-items: center;">
-        <span v-if="title">{{ title }}</span>
-
-        <VSpacer />
-
-        <VBtn
-          v-if="props.closable && !props.loading"
-          variant="text"
-          density="comfortable"
-          icon="$close"
-          @click="close"
-        />
-      </div>
+    <template v-if="title" #title>
+      {{ title }}
     </template>
 
     <template v-if="props.subtitle" #subtitle>
@@ -229,5 +216,13 @@ function close() {
         {{ button.title }}
       </VBtn>
     </template>
+
+    <VIcon
+      v-if="props.closable && !props.loading"
+      size="small"
+      icon="$close"
+      style="position: absolute; right: 8px; top: 8px;"
+      @click="close"
+    />
   </VCard>
 </template>

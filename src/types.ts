@@ -3,7 +3,7 @@ import type { VBtn, VCard, VDialog, VTextField } from 'vuetify/components'
 
 export type ButtonProps
   = & Omit<VBtn['$props'], 'text'>
-    & { title: string, value: any, onClick?: () => void }
+    & { title: string, value: any, onClick?: (close: (value?: any) => void) => void | Promise<void> }
 
 export type Level = 'warning' | 'error' | 'info' | 'success'
 

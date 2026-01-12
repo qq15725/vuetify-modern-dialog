@@ -26,6 +26,18 @@ async function openDialog(feature: string) {
     case 'confirm':
       res = await dialog.confirm({ text })
       break
+    case 'buttons':
+      res = await dialog.info({
+        buttons: [
+          { title: 'Button1', onClick: async (close) => {
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            close()
+          } },
+          { title: 'Button2' },
+          { title: 'Button3' },
+        ],
+      })
+      break
     case 'prompt':
       res = await dialog.prompt({
         title: 'Password',
@@ -95,6 +107,9 @@ async function openDialog(feature: string) {
           </VBtn>
           <VBtn @click="openDialog('confirm')">
             confirm
+          </VBtn>
+          <VBtn @click="openDialog('buttons')">
+            buttons
           </VBtn>
           <VBtn @click="openDialog('prompt')">
             prompt
