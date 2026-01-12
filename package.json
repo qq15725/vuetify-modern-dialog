@@ -60,25 +60,22 @@
     "release": "bumpp package.json --commit \"release: v%s\" --push --all --tag",
     "start": "esno src/index.ts",
     "test": "vitest",
-    "typecheck": "tsc --noEmit",
-    "prepare": "simple-git-hooks"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.4.1",
-    "@types/node": "^24.7.0",
-    "@vitejs/plugin-vue": "^6.0.1",
-    "bumpp": "^10.3.1",
+    "@antfu/eslint-config": "^6.7.3",
+    "@types/node": "^25.0.6",
+    "@vitejs/plugin-vue": "^6.0.3",
+    "bumpp": "^10.3.2",
     "conventional-changelog-cli": "^5.0.0",
-    "eslint": "^9.37.0",
-    "lint-staged": "^16.2.3",
-    "simple-git-hooks": "^2.13.1",
+    "eslint": "^9.39.2",
     "typescript": "^5.9.3",
-    "vite": "^7.1.9",
-    "vite-plugin-vue-devtools": "^8.0.2",
-    "vitest": "^3.2.4",
-    "vue": "^3.5.22",
-    "vue-tsc": "^3.1.1",
-    "vuetify": "^3.10.5"
+    "vite": "^7.3.1",
+    "vite-plugin-vue-devtools": "^8.0.5",
+    "vitest": "^4.0.16",
+    "vue": "^3.5.26",
+    "vue-tsc": "^3.2.2",
+    "vuetify": "^3.11.6"
   },
   "peerDependencies": {
     "typescript": ">=4.7",
@@ -89,11 +86,5 @@
     "typescript": {
       "optional": true
     }
-  },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged"
-  },
-  "lint-staged": {
-    "*": ""
   }
 }
