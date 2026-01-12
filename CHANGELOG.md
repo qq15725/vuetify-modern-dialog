@@ -1,3 +1,12 @@
+## [0.0.6](https://github.com/qq15725/vuetify-modern-dialog/compare/v0.0.5...v0.0.6) (2026-01-12)
+
+
+### Features
+
+* buttons ([5aa327d](https://github.com/qq15725/vuetify-modern-dialog/commit/5aa327d75b60c871bde041767748fa0856b8fbc6))
+
+
+
 ## [0.0.5](https://github.com/qq15725/vuetify-modern-dialog/compare/v0.0.4...v0.0.5) (2025-10-10)
 
 
